@@ -2,6 +2,7 @@ from datetime import datetime
 
 from bson import ObjectId
 
+#todo repository class to handle database operations
 class TodoRepository:
     def __init__(self,collection):
         self.collection = collection
@@ -29,13 +30,13 @@ class TodoRepository:
      update_data["updated_at"] = datetime.utcnow()
     
      result = await self.collection.find_one_and_update(
-        {"_id": ObjectId(todo_id)},          # 1. convert str -> ObjectId for the query
+        {"_id": ObjectId(todo_id)},        
         {"$set": update_data},
-        return_document=True                  # 2. return the updated doc, not update metadata
+        return_document=True             
     )
     
      if result:
-        result["_id"] = str(result["_id"])   # 3. convert ObjectId -> str for the response
+        result["_id"] = str(result["_id"])  
      return result
 
     async def delete_todo(self, todo_id):
