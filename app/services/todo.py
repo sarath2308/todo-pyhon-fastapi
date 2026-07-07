@@ -1,4 +1,3 @@
-# app/services/todo_service.py
 from app.repo.todo import TodoRepository
 from typing import List
 
@@ -7,16 +6,16 @@ class TodoService:
         self.repo = repo
 
     async def list_todos(self, limit: int = 100) -> List[dict]:
-        return await self.repo.list(limit)
+        return await self.repo.list_todos()
 
     async def create_todo(self, payload: dict) -> dict:
-        return await self.repo.create(payload)
+        return await self.repo.create_todo(payload)
 
     async def get_todo(self, obj_id: str) -> dict:
-        return await self.repo.get(obj_id)
+        return await self.repo.get_todo_by_id(obj_id)
 
     async def update_todo(self, obj_id: str, patch: dict) -> dict:
-        return await self.repo.update(obj_id, patch)
+        return await self.repo.update_todo(obj_id, patch)
 
     async def delete_todo(self, obj_id: str) -> bool:
-        return await self.repo.delete(obj_id)
+        return await self.repo.delete_todo(obj_id)
