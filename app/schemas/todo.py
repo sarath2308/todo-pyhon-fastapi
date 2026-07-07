@@ -20,7 +20,7 @@ class TodoUpdate(BaseModel):
 
 
 class TodoResponse(BaseModel):
-    id: str
+    id: str = Field(alias="_id")
     title: str
     description: Optional[str]
     completed: bool

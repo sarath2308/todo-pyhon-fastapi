@@ -1,6 +1,6 @@
 # app/deps.py
 from fastapi import Depends
-from app.database.mongo import get_db        # returns the `db` from your mongo module
+from app.database.mongo import get_db  
 from app.repo.todo import TodoRepository
 from app.services.todo import TodoService
 
