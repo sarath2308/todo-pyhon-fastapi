@@ -1,62 +1,119 @@
-# Todo FastAPI
+# Todo FastAPI + React
 
-A simple FastAPI application for managing todos with MongoDB.
+A fullstack todo application with a FastAPI backend, MongoDB persistence, and a React + Vite frontend.
 
-## Features
+## What it does
 
-- Create, list, update, and delete todos
-- MongoDB-backed persistence
-- Pydantic models for request and response validation
-- Dependency injection for repository and service layers
+- Add new tasks with a title
+- Edit existing tasks
+- Mark tasks completed or incomplete
+- Delete tasks using soft-delete (`isDeleted: true`)
+- Backend partial updates preserve fields like `description` and `priority`
+- Frontend uses Tailwind CSS and React Query for a polished CRUD experience
 
-## Project structure
+## Repository structure
 
-- app/main.py: application entry point and lifespan events
-- app/routers/todo.py: API routes for todo operations
-- app/services/todo.py: business logic for todos
-- app/repo/todo.py: MongoDB repository layer
-- app/database/mongo.py: MongoDB connection setup
-- app/schemas/todo.py: request and response schemas
+- `backend/app/main.py`: FastAPI application entry point
+- `backend/app/routers/todo.py`: todo API routes
+- `backend/app/services/todo.py`: business logic layer
+- `backend/app/repo/todo.py`: MongoDB repository layer
+- `backend/app/database/mongo.py`: MongoDB connection setup
+- `backend/app/schemas/todo.py`: Pydantic request and response models
+- `frontend/src/App.jsx`: application shell and layout
+- `frontend/src/components/todo.component.jsx`: todo UI component
+- `frontend/src/hooks/*.js`: CRUD hooks using React Query
+- `frontend/src/api/api.js`: axios API client
 
-## Requirements
+## Backend setup
 
-Install dependencies with:
+1. Open a terminal and go to the backend folder:
+
+```bash
+cd backend
+```
+
+2. Install Python dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Environment setup
-
-Create a local environment file based on the example:
+3. Create your environment file:
 
 ```bash
 copy .env.example .env
 ```
 
-Then update the DB_URI value to point to your MongoDB instance.
+4. Set your MongoDB URI inside `backend/.env`:
 
-## Run the app
+```ini
+DB_URI=mongodb+srv://...your-connection-string...
+```
 
-Start the development server with:
+## Frontend setup
+
+1. Open a terminal and go to the frontend folder:
 
 ```bash
+cd frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Add your API endpoint to a frontend environment file:
+
+```ini
+VITE_API_URL=http://127.0.0.1:8000/todos
+```
+
+4. Start the frontend:
+
+```bash
+npm run dev
+```
+
+## Running the app
+
+Start the backend via:
+
+```bash
+cd backend
 uvicorn app.main:app --reload
 ```
 
-The API will be available at:
+Then start the frontend via:
 
-- http://127.0.0.1:8000/todos/
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend will connect to the backend at `VITE_API_URL` and the todo list will render in the browser.
 
 ## API endpoints
 
-- GET /todos/ - list todos
-- POST /todos/ - create a todo
-- PATCH /todos/{todo_id} - update a todo
-- DELETE /todos/{todo_id} - delete a todo
+- `GET /todos/` - list active todos
+- `POST /todos/` - create a todo
+- `PATCH /todos/{todo_id}` - update one or more todo fields
+- `DELETE /todos/{todo_id}` - soft-delete a todo
+
+## Backend data expectations
+
+- Create payload:
+  - `title` (required)
+  - `description` (optional)
+  - `priority` (optional, default `medium`)
+  - `due_date` (optional)
+
+- Update payload uses partial updates and can include:
+  - `title`, `description`, `completed`, `priority`, `due_date`
 
 ## Notes
 
-- The app uses the MongoDB database specified in DB_URI.
-- Todo records are soft-deleted via the isDeleted flag.
-- The repository converts MongoDB ObjectId values to strings in responses.
+- Tasks are soft-deleted, so deleted items are hidden from list results but not removed from the database.
+- React Query invalidates the `todos` cache after update/delete operations so the UI stays in sync.
+- The frontend uses Tailwind CSS for styling and `react-hot-toast` for notifications.
